@@ -206,11 +206,11 @@
     }
 
     const initialAntCount = this.ants.length;
-    let additionalAnts = 0;
-
-    this.ants.forEach(ant => {
+let additionalAnts = -1;
+    
+this.ants.forEach(ant => {
         ant.health -= 20;
-        console.log(ant.health)
+       
     });
 
     this.ants = this.ants.filter(ant => {
@@ -222,7 +222,7 @@
     });
 
     const remainingAntCount = this.ants.length;
-    const workedAnts = initialAntCount - remainingAntCount + additionalAnts - 1;
+    const workedAnts = initialAntCount - remainingAntCount + additionalAnts;
 
     return `${workedAnts} ants starting work!`;
 }
