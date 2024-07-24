@@ -196,60 +196,87 @@
       // 🌟 HINT: remember about the `filter` method which arrays have
       // ❗ WARNING: methods must respect the order of the ants
 
+   
   constructor(...antNames) {
-    this.ants = antNames.map(name => ({ name, health: 100 }));
-  console.log(...antNames)
+    this.ants = antNames.map((name) => ({ name, health: 100 }));
   }
+
   work() {
     if (this.ants.length === 0) {
-        return "No ants here. Did you work them to death?";
+      return "No ants here. Did you work them to death?";
     }
 
+    // Store initial count of ants
     const initialAntCount = this.ants.length;
-let additionalAnts = -1;
-    
-this.ants.forEach(ant => {
-        ant.health -= 20;
-       
+
+    // Update health
+    this.ants.forEach(ant => {
+      ant.health -= 20;
     });
 
-    this.ants = this.ants.filter(ant => {
-        if (ant.health <= 0) {
-            additionalAnts++;
-            return false; // Exclude ants with non-positive health
-        }
-        return true; // Keep ants with positive health
-    });
+    // Count ants that started work (those initially present)
+    const antsWorked = initialAntCount;
 
-    const remainingAntCount = this.ants.length;
-    const workedAnts = initialAntCount - remainingAntCount + additionalAnts;
+    // Filter out dead ants
+    this.ants = this.ants.filter(ant => ant.health > 0);
 
-    return `${workedAnts} ants starting work!`;
-}
+    return `${antsWorked} ants starting work!`;
+  }
 
-  feed(...antNames) {
-    if (!antNames.length) {
-      throw new Error("Please specify the name(s) of the ant(s) to feed");
+  feed(name) {
+    // Find all instances of the ant with the given name
+    const fedAnts = this.ants.filter(ant => ant.name === name);
+
+    // If no ants found with the given name, return not found message
+    if (fedAnts.length === 0) {
+      return `${name} not found!`;
     }
 
-    let anyAntsFound = false;
-    this.ants = this.ants.map((ant) => {
-      if (antNames.includes(ant.name)) {
-        anyAntsFound = true;
-        ant.health += 15;
-      }
-      return ant;
+    // Increase health of all found ants
+    fedAnts.forEach(ant => {
+      ant.health += 15;
     });
 
-    if (anyAntsFound) {
-      return "Yum!";
-    } else {
-      return antNames.map((name) => `${name} not found!`).join(", ");
-      console.log(anyAntsFound);
-    }
+    return "Yum!";
   }
 }
 
+
+
+// Test cases
+let farm = new AntFarm("Alice", "Bob", "Charlie");
+console.log(farm.ants); // [{ name: "Alice", health: 100 }, { name: "Bob", health: 100 }, { name: "Charlie", health: 100 }]
+
+console.log(farm.work()); // "3 ants starting work!"
+console.log(farm.ants); // [{ name: "Alice", health: 80 }, { name: "Bob", health: 80 }, { name: "Charlie", health: 80 }]
+
+console.log(farm.feed("Bob")); // "Yum!"
+console.log(farm.ants); // [{ name: "Alice", health: 80 }, { name: "Bob", health: 95 }, { name: "Charlie", health: 80 }]
+
+console.log(farm.feed("David")); // "David not found!"
+console.log(farm.ants); // [{ name: "Alice", health: 80 }, { name: "Bob", health: 95 }, { name: "Charlie", health: 80 }]
+
+console.log(farm.work()); // "3 ants starting work!"
+console.log(farm.ants); // [{ name: "Alice", health: 60 }, { name: "Bob", health: 75 }, { name: "Charlie", health: 60 }]
+
+console.log(farm.work()); // "3 ants starting work!"
+console.log(farm.ants); // [{ name: "Alice", health: 40 }, { name: "Bob", health: 55 }, { name: "Charlie", health: 40 }]
+
+console.log(farm.work()); // "3 ants starting work!"
+console.log(farm.ants); // [{ name: "Alice", health: 20 }, { name: "Bob", health: 35 }, { name: "Charlie", health: 20 }]
+
+console.log(farm.work()); // "2 ants starting work!"
+console.log(farm.ants); // [{ name: "Bob", health: 15 }, { name: "Charlie", health: 0 }]
+
+console.log(farm.work()); // "1 ants starting work!"
+console.log(farm.ants); // [{ name: "Bob", health: -5 }]
+
+console.log(farm.work()); // "No ants here. Did you work them to death?"
+console.log(farm.ants); // []
+
+    
+
+   
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
